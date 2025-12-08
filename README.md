@@ -1,4 +1,4 @@
- # AgentZero
+# AgentZero
 
 > **The Self-Optimizing AI Pipeline built for the Nemesis Hackathon.**
 
@@ -27,7 +27,7 @@ We engineered AgentZero to specifically target these technical challenges:
 
 ### 4. The Stormbreaker Deployment (Vercel)
 * **Live Deployment:** The AgentZero status dashboard is deployed on Vercel.
-* **Link:** [deployement pending]
+* **Link:** [deployment_pending]
 
 ### 5. The Captain Code (CodeRabbit)
 * **Implementation:** We enforced strict quality control using **CodeRabbit**.
