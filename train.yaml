@@ -1,0 +1,17 @@
+model:
+  model_name: "HuggingFaceTB/SmolLM2-135M-Instruct"
+  trust_remote_code: True
+  torch_dtype_str: "float32"
+
+data:
+  train:
+    datasets:
+      - dataset_name: "yahma/alpaca-cleaned"
+        split: "train[:10]"
+
+training:
+  output_dir: "output/nemesis_v1"
+  trainer_type: "TRL_SFT"
+  max_steps: 5
+  per_device_train_batch_size: 1
+  save_steps: 5
