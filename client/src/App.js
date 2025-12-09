@@ -1,170 +1,118 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import './App.css';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell
+} from 'recharts';
+import { Home, Users, Settings, Activity, Terminal } from 'lucide-react';
+
+const data = [
+  { name: 'Day 1', accuracy: 60 },
+  { name: 'Day 2', accuracy: 70 },
+  { name: 'Day 3', accuracy: 75 },
+  { name: 'Day 4', accuracy: 85 },
+  { name: 'Day 5', accuracy: 92 },
+];
 
 function App() {
-  // --- CONFIGURATION ---
-  const API_URL = "http://127.0.0.1:8080";
-  const AUTH_HEADER = "Basic bW9oaXRqZXN3YW5pNzRAZ21haWwuY29tOk0xbzJoM2k0dDVA";
-  // ---------------------
-
-  const [target, setTarget] = useState('');
-  const [status, setStatus] = useState('IDLE');
-  const [logs, setLogs] = useState(["NEMESIS_OS v1.1.2 initialized..."]);
-  const [report, setReport] = useState(null);
-  const logsEndRef = useRef(null);
-
-  useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [logs]);
-
-  const addLog = (msg) => {
-    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-    setLogs(prev => [...prev, `[${time}] ${msg}`]);
-  };
-
-  const checkStatus = async (executionId) => {
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/v1/executions/${executionId}`, {
-          headers: { 'Authorization': AUTH_HEADER }
-        });
-
-        if (res.status === 404) return;
-
-        const data = await res.json();
-
-        if (data.state.current === 'SUCCESS') {
-          clearInterval(interval);
-          addLog(">> SCAN COMPLETE. DOWNLOADING REPORT...");
-          // Wait 1 second to ensure logs are fully written
-          setTimeout(() => fetchLogs(executionId), 1000);
-        } else if (data.state.current === 'FAILED') {
-          clearInterval(interval);
-          setStatus('ERROR');
-          addLog("!! BACKEND FAILED. CHECK KESTRA UI.");
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }, 2000);
-  };
-
-  const fetchLogs = async (executionId) => {
-    try {
-      console.log("Fetching logs for:", executionId);
-      const res = await fetch(`${API_URL}/api/v1/logs/${executionId}`, {
-        headers: { 'Authorization': AUTH_HEADER }
-      });
-
-      const data = await res.json();
-      const fullLogText = data.map(l => l.message).join('\n');
-      console.log("Full Log:", fullLogText);
-
-      // --- THE FIX: Split by the "Magic Phrase" ---
-      const parts = fullLogText.split(">> VULNERABILITIES DETECTED:");
-
-      if (parts.length > 1) {
-        // We take the part AFTER the phrase
-        const jsonPart = parts[1];
-
-        // Find the JSON array inside that part
-        const match = jsonPart.match(/\[[\s\S]*\]/);
-
-        if (match) {
-          const bugs = JSON.parse(match[0]);
-          setReport(bugs);
-          setStatus('SUCCESS');
-          addLog(`>> ${bugs.length} VULNERABILITIES FOUND.`);
-        } else {
-          throw new Error("JSON structure not found after marker");
-        }
-      } else {
-        // Fallback: Try finding JSON anywhere if marker missing
-        const match = fullLogText.match(/\[\s*\{"file":[\s\S]*\}\s*\]/);
-        if (match) {
-          const bugs = JSON.parse(match[0]);
-          setReport(bugs);
-          setStatus('SUCCESS');
-          addLog(`>> ${bugs.length} VULNERABILITIES FOUND.`);
-        } else {
-          addLog(">> NO VULNERABILITIES DETECTED.");
-          setStatus('SUCCESS');
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      addLog("!! PARSING ERROR: DATA CORRUPTED BY DOCKER LOGS.");
-    }
-  };
-
-  const handleScan = async () => {
-    if (!target) return;
-    setStatus('SCANNING');
-    setReport(null);
-    setLogs(["INITIALIZING NEW SCAN..."]);
-
-    const formData = new FormData();
-    formData.append('target_url', target);
-
-    try {
-      const res = await fetch(`${API_URL}/api/v1/executions/company.team/nemesis_scan`, {
-        method: 'POST',
-        headers: { 'Authorization': AUTH_HEADER },
-        body: formData
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        addLog(`>> AGENT DEPLOYED. ID: ${data.id}`);
-        checkStatus(data.id);
-      } else {
-        addLog(`!! CONNECTION ERROR: ${res.status}`);
-        setStatus('ERROR');
-      }
-    } catch (err) {
-      addLog(`!! NETWORK FAILURE: ${err.message}`);
-      setStatus('ERROR');
-    }
-  };
-
   return (
-    <div className="App">
-      <div className="scanline"></div>
-      <div className="container">
-        <h1>NEMESIS_AI</h1>
-        <div className="terminal-box">
-          <div className="terminal-header">
-            <span>SYS.ADMIN</span>
-            <span className={`status-badge status-${status}`}>{status}</span>
+    <div className="app">
+      <div className="sidebar">
+        <div className="sidebar-header">
+          <h2>AGENT<span style={{ color: '#00ff00' }}>ZERO</span></h2>
+        </div>
+        <nav className="navigation">
+          <ul>
+            <li className="active"><Home size={20} /> <span>Mission Control</span></li>
+            <li><Users size={20} /> <span>Agents</span></li>
+            <li><Settings size={20} /> <span>Settings</span></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div className="main-area">
+        <header className="top-bar">
+          <h1>SYSTEM DASHBOARD</h1>
+          <div className="status-badge">
+            <span className="dot"></span> SYSTEM ONLINE
           </div>
-          <div className="input-group">
-            <input
-              type="text"
-              placeholder="ENTER GITHUB REPOSITORY URL..."
-              value={target}
-              onChange={(e) => setTarget(e.target.value)}
-              disabled={status === 'SCANNING'}
-            />
+        </header>
+
+        <div className="dashboard-grid">
+          {/* Card 1: System Health */}
+          <div className="card">
+            <div className="card-header">
+              <Activity color="#00ff00" />
+              <h3>System Health</h3>
+            </div>
+            <div className="big-number">100%</div>
+            <p className="subtext">All Systems Operational</p>
           </div>
-          <button className="btn-main" onClick={handleScan} disabled={status === 'SCANNING'}>
-            {status === 'SCANNING' ? '>> SCANNING <<' : 'INITIATE ATTACK'}
-          </button>
-          <div className="logs-area">
-            {logs.map((log, i) => <div key={i} className="log-entry">{log}</div>)}
-            <div ref={logsEndRef} />
+
+          {/* Card 2: Model Accuracy */}
+          <div className="card">
+            <div className="card-header">
+              <Activity color="#bf00ff" />
+              <h3>Model Accuracy</h3>
+            </div>
+            <div style={{ width: '100%', height: 150 }}>
+              <ResponsiveContainer>
+                <LineChart data={data}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="name" stroke="#666" />
+                  <YAxis stroke="#666" />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#111', border: '1px solid #333' }}
+                  />
+                  <Line type="monotone" dataKey="accuracy" stroke="#00ff00" strokeWidth={2} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Card 3: Live Logs */}
+          <div className="card wide">
+            <div className="card-header">
+              <Terminal color="#00ff00" />
+              <h3>Live Agent Logs</h3>
+            </div>
+            <div className="logs-container">
+              <div className="log-entry"><span className="time">[10:00:01]</span> <span className="cmd">INIT</span> AgentZero Core initialized.</div>
+              <div className="log-entry"><span className="time">[10:00:05]</span> <span className="cmd">SCAN</span> Detected new data batch (Size: 500MB).</div>
+              <div className="log-entry"><span className="time">[10:00:12]</span> <span className="cmd">ANALYSIS</span> Data quality score: 98%.</div>
+              <div className="log-entry"><span className="time">[10:00:15]</span> <span className="cmd">ACTION</span> Triggering Oumi Fine-Tuning Loop...</div>
+              <div className="log-entry"><span className="time">[10:00:45]</span> <span className="cmd">SUCCESS</span> Model weights updated. Accuracy +2%.</div>
+            </div>
+          </div>
+
+          {/* Card 4: Oumi Training */}
+          <div className="card">
+            <div className="card-header">
+              <h3>RL Fine-Tuning</h3>
+            </div>
+            <div style={{ width: '100%', height: 200, position: 'relative' }}>
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={[{ value: 45 }, { value: 55 }]}
+                    innerRadius={60}
+                    outerRadius={80}
+                    startAngle={90}
+                    endAngle={-270}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    <Cell fill="#00ff00" />
+                    <Cell fill="#222" />
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="center-text">
+                45%
+              </div>
+            </div>
           </div>
         </div>
-        {report && (
-          <div className="report-box" style={{ marginTop: '20px', width: '600px', border: '1px solid #0f0', background: 'black' }}>
-            <h3 style={{ background: '#0f0', color: 'black', margin: 0, padding: '10px' }}>VULNERABILITY REPORT</h3>
-            {report.map((bug, i) => (
-              <div key={i} style={{ padding: '15px', borderBottom: '1px solid #333', textAlign: 'left' }}>
-                <div style={{ color: '#ff0055', fontWeight: 'bold' }}>[{bug.severity || 'CRITICAL'}] {bug.file}</div>
-                <div style={{ color: '#ccc', fontSize: '0.9rem' }}>{bug.bug}</div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );
