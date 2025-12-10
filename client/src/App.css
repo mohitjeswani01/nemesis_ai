@@ -161,7 +161,7 @@ body {
   color: white;
 }
 
-/* Additional styles to match classes used in App.js (terminal UI) */
+/* Additional styles */
 .App {
   display: flex;
   align-items: center;
@@ -253,3 +253,139 @@ body {
 .status-badge.status-SCANNING { background: rgba(0,255,0,0.08); color:#00ff00; border-color:#00ff00 }
 .status-badge.status-SUCCESS { background: rgba(0,200,0,0.08); color:#0f0; border-color:#0f0 }
 .status-badge.status-ERROR { background: rgba(255,0,0,0.06); color:#ff4444; border-color:#ff4444 }
+
+.cyber-button {
+  background: #00ff00;
+  color: #000;
+  border: none;
+  padding: 8px 20px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 10px #00ff00;
+  transition: 0.3s;
+  margin-left: auto;
+}
+
+.cyber-button:hover {
+  background: #fff;
+  box-shadow: 0 0 20px #00ff00;
+}
+
+.cyber-button:disabled {
+  background: #333;
+  color: #666;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.cmd.SUCCESS { color: #00ff00; font-weight: bold; }
+.cmd.ERROR { color: #ff0000; font-weight: bold; }
+.cmd.ACTION { color: #ffff00; }
+.cmd.DATA { color: #00ffff; }
+.cmd.INFO { color: #888; }
+
+/* Agents Grid */
+.agents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.agent-card {
+  background: #111;
+  border: 1px solid #333;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.agent-card:hover {
+  border-color: #00ff00;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+}
+
+.agent-icon {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.agent-info h3 { margin-bottom: 5px; color: #fff; }
+.agent-info .role { color: #888; font-size: 0.9rem; margin-bottom: 10px; }
+.tech-stack { font-size: 0.8rem; color: #00ff00; background: rgba(0, 255, 0, 0.1); padding: 2px 8px; border-radius: 4px; }
+
+.status-pill {
+  margin-top: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+.status-pill.ONLINE { background: rgba(0, 255, 0, 0.2); color: #00ff00; }
+.status-pill.STANDBY { background: rgba(255, 255, 0, 0.2); color: #ffff00; }
+.status-pill.ACTIVE { background: rgba(0, 255, 255, 0.2); color: #00ffff; }
+
+/* Settings List */
+.settings-list {
+  max-width: 600px;
+  background: #111;
+  padding: 30px;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #222;
+}
+
+.setting-label p { font-size: 0.8rem; color: #666; margin-top: 5px; }
+.setting-control { cursor: pointer; }
+
+/* --- NEW TOAST NOTIFICATION STYLES --- */
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #0a0a0a;
+  color: #e0e0e0;
+  padding: 20px;
+  border-left: 4px solid #ff4444; /* Red accent for security alert */
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  z-index: 9999;
+  width: 380px;
+  animation: slideIn 0.5s ease-out;
+}
+
+.toast-header {
+  font-weight: bold;
+  color: #ff4444;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.toast-body {
+  font-size: 0.9rem;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
