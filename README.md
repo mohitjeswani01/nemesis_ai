@@ -1,66 +1,145 @@
- # AgentZero
+# ⚡ AgentZero — Autonomous Ops Layer for Real-World AI Execution
+> **“Most agents talk. AgentZero acts.”**
 
-> **The Self-Optimizing AI Pipeline built for the Nemesis Hackathon.**
+![AgentZero Dashboard](assets/dashboard.png)
 
-## 🚀 The Problem
-AI models usually become stagnant after deployment. Updating them requires a team of engineers to manually retrain, validate, and redeploy models. This is slow, expensive, and prone to human error.
+AgentZero is an **Autonomous Operational Loop** that transforms AI from a text generator into a **real-world operator**.  
+It closes the gap between *reasoning → execution → validation → correction*, enabling safe, multi-step automation that actually works in practice.
 
-## 💡 The Solution
-**AgentZero** is a fully autonomous, "Hyper-Agentic" loop. It uses **Kestra** to watch for new data, **AI Agents** to decide if that data is valuable, and **Oumi** to automatically fine-tune the model using Reinforcement Learning.
-
-It is an AI that trains itself, built by AI (Cline), and verified by AI (CodeRabbit).
-
-## 🏆 Prize Category Qualifications
-We engineered AgentZero to specifically target these technical challenges:
-
-### 1. The Infinity Build (Cline CLI)
-* **Implementation:** We utilized **Cline CLI** to architect the system.
-* **Impact:** Cline acted as our "Lead Engineer," autonomously scaffolding the Docker containers and Kestra flow logic, reducing setup time by 80%.
-
-### 2. The Wakanda Data (Kestra AI Agents)
-* **Implementation:** **Kestra's AI Agent** sits at the heart of our pipeline.
-* **Logic:** The agent ingests raw data logs and summarizes them. It then makes a **logic decision**: if the data contains high-value patterns, it triggers the Oumi fine-tuning flow.
-
-### 3. The Iron Intelligence (Oumi RL)
-* **Implementation:** We integrated the **Oumi open-source library**.
-* **RL Fine-Tuning:** Instead of standard supervised learning, we configured an Oumi pipeline to apply **Reinforcement Learning (RL)** to fine-tune our model weights based on the data provided by Kestra.
-
-### 4. The Stormbreaker Deployment (Vercel)
-* **Live Deployment:** The AgentZero status dashboard is deployed on Vercel.
-* **Link:** [deployement pending]
-
-### 5. The Captain Code (CodeRabbit)
-* **Implementation:** We enforced strict quality control using **CodeRabbit**.
-* **Proof:** Every pull request in this repository was audited by CodeRabbit to ensure no broken logic entered the self-optimizing loop.
+AgentZero integrates **Kestra, Oumi, Cline, CodeRabbit, and Vercel** to build a complete end-to-end autonomous system.
 
 ---
 
-## 📸 Proof of AI Integration (CodeRabbit)
-Automated code quality checks were performed on every commit.
-![CodeRabbit Review](assets/coderabbit-review.png)
+# 🌍 Why AgentZero Exists (Impact)
 
-## 🛠️ Architecture
-* **Orchestration:** Kestra
-* **ML Framework:** Oumi (RL Fine-tuning)
-* **Infrastructure:** Docker
-* **Frontend:** Vercel
-* **Dev Agent:** Cline
-* **QA Agent:** CodeRabbit
+Traditional AI agents fail because:
+- They cannot safely **execute** real operations  
+- They cannot **orchestrate** multi-step tasks  
+- They cannot **self-correct**  
 
-## ⚙️ Local Setup
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/mohitjeswani/nemesis-hackathon.git](https://github.com/mohitjeswani/nemesis-hackathon.git)
-    cd nemesis-hackathon
-    ```
+AgentZero solves these limitations through:
+- **Kestra** for decision-making and workflow orchestration  
+- **Oumi (Llama-3)** for structured reasoning  
+- **Cline** for autonomous local fixes  
+- **CodeRabbit** for safety & code review  
+- **Vercel UI** for a secure, user-friendly interface  
 
-2.  **Start Services:**
-    ```bash
-    docker-compose up -d
-    ```
+This makes AgentZero practical for DevOps, debugging, CI/CD automation, and real infrastructure tasks.
 
-3.  **Access Kestra UI:**
-    Open `http://localhost:8080` to view the `agent-zero-main` flow.
+---
 
-## 🔮 Future Roadmap
-* Creating a continuous feedback loop where Vercel user interactions perform live RLHF (Reinforcement Learning from Human Feedback) via Oumi.
+# 🧠 Core Components & How They Work
+
+## 1. Kestra — The Orchestration Brain
+![Kestra Dashboard](assets/kestra.png)
+
+Kestra handles:
+- Log ingestion  
+- AI inference calls  
+- Conditional branching (Fix / Report)  
+- Execution workflows  
+- Autonomous loops and triggers  
+
+It acts as the **control center** for all agentic decisions.
+
+---
+
+## 2. Cline — The Autonomous Builder
+
+Cline operates locally to:
+- Scaffold backend code  
+- Fix errors autonomously  
+- Run tests and debug issues  
+- Handle git commits  
+- Iterate without manual intervention  
+
+This allows AgentZero to **improve itself** through real execution cycles.
+
+---
+
+## 3. CodeRabbit — Automated QA & Safety
+![CodeRabbit Review](assets/coderabbitreview2.png)
+
+Every commit produced by the agent loop:
+- Opens a PR  
+- Gets reviewed by CodeRabbit  
+- Receives bug warnings, documentation suggestions, and safety checks  
+
+This ensures quality and prevents unsafe merges.
+
+---
+
+## 4. Oumi — The Intelligence Layer
+![Oumi](assets/oumi-setup.png)
+
+Oumi (Llama-3) converts:
+**Raw logs → structured JSON → precise commands**
+
+Capabilities:
+- Intent detection  
+- Error reasoning  
+- Safety validation  
+- Generating deterministic agent actions  
+
+This gives AgentZero interpretability and reliability.
+
+---
+
+## 5. Vercel — Secure Frontend Layer
+
+Frontend is deployed on Vercel with:
+- **Instant global access**  
+- **No cold starts**  
+- **Hybrid Security Mode**  
+
+If backend is unreachable → UI enters **read-only secure mode**.  
+If backend is available → full autonomous operation.
+
+This prevents unsafe remote execution.
+
+---
+
+# 🧠 System Architecture
+
+```mermaid
+graph TD
+    A[User — Vercel UI] -->|Start Mission| B[Next.js Frontend]
+    B -->|Security Check| C{Local Backend Available?}
+    C -->|Yes| D[Kestra Orchestrator]
+    C -->|No| E[Read-Only Mode + Alert]
+    D -->|Logs| F[Oumi Llama-3 Inference]
+    F -->|Structured JSON| D
+    D -->|Fix Branch| G[Automated Code Fix]
+    D -->|Report Branch| H[System Diagnostic Report]
+    G -->|Commit| I[GitHub]
+    I -->|Review| J[CodeRabbit]
+```
+---
+# 🛠️ Installation & Setup Guide
+
+This section explains exactly how to **clone the repo**, **start Kestra**, and **run the frontend** so that judges and users can reproduce AgentZero locally in under 10 minutes.
+
+---
+
+# ✔️ Prerequisites
+
+Make sure you have the following installed:
+
+| Tool | Version |
+|------|---------|
+| **Node.js** | ≥ 18.x |
+| **NPM** | ≥ 8.x |
+| **Python** | ≥ 3.10 |
+| **Docker** | Latest |
+| **Docker Compose** | Latest |
+| **Git** | Latest |
+
+---
+
+# 📥 1. Clone the Repository
+
+```bash
+git clone https://github.com/mohitjeswani01/nemesis_ai.git
+cd nemesis_ai
+```
+
