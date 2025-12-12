@@ -108,7 +108,7 @@ const AgentsView = () => {
     { name: 'AgentZero', role: 'Orchestrator', tool: 'Kestra', status: 'ONLINE', icon: <Zap color="#bf00ff" /> },
     { name: 'Oumi-7B', role: 'Model Trainer', tool: 'Oumi / PyTorch', status: 'STANDBY', icon: <Activity color="#00ff00" /> },
     { name: 'Cline', role: 'Autonomous Coder', tool: 'VS Code Agent', status: 'ACTIVE', icon: <Code color="#00ffff" /> },
-    { name: 'Postgres', role: 'Memory Bank', tool: 'Docker DB', status: 'ONLINE', icon: <Database color="#ffaa00" /> },
+    { name: 'Postgress', role: 'Memory Bank', tool: 'Docker DB', status: 'ONLINE', icon: <Database color="#ffaa00" /> },
   ];
 
   return (
