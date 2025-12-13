@@ -32,9 +32,6 @@ def start_training():
     print(">> SIGNAL RECEIVED: Initiating Training Protocol...")
     
     try:
-        # Option A: Trigger Kestra via API (The Professional Way)
-        # We send a POST request to Kestra's trigger endpoint
-        # The 'wait=True' tells Kestra to keep the connection open until it finishes (optional)
         response = requests.post(KESTRA_URL, json={"wait": False}) 
         
         if response.status_code == 200:

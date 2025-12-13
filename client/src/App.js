@@ -231,19 +231,34 @@ function App() {
     const steps = [
       { msg: 'Oumi Agent: Initializing Environment...', delay: 1000 },
       { msg: 'Oumi Agent: Loading Llama-3-8b-Instruct Weights...', delay: 2500 },
-      { msg: 'STEP 1/5 | LOSS: 2.10 | ACCURACY: 61.5%', delay: 5500 },
-      { msg: 'STEP 5/5 | LOSS: 0.78 | ACCURACY: 80.9%', delay: 11500 },
+
+      { msg: 'STEP 1/5 | LOSS: 2.10 | ACCURACY: 61.5%', delay: 4500, acc: 61.5 },
+      { msg: 'STEP 2/5 | LOSS: 1.82 | ACCURACY: 65.9%', delay: 6000, acc: 65.9 },
+      { msg: 'STEP 3/5 | LOSS: 1.43 | ACCURACY: 71.2%', delay: 7500, acc: 71.2 },
+      { msg: 'STEP 4/5 | LOSS: 1.05 | ACCURACY: 76.8%', delay: 9500, acc: 76.8 },
+      { msg: 'STEP 5/5 | LOSS: 0.78 | ACCURACY: 80.9%', delay: 11500, acc: 80.9 },
+
       { msg: 'TRAINING COMPLETE. NEW MODEL DEPLOYED.', delay: 13000, type: 'SUCCESS' }
     ];
 
-    steps.forEach(({ msg, delay, type }) => {
+    steps.forEach(({ msg, delay, type, acc }) => {
       setTimeout(() => {
         addLog(type || 'DATA', msg);
-        if (msg.includes('STEP')) setData(prev => [...prev, { name: 'New', accuracy: Math.random() * 10 + 90 }]);
-        if (msg.includes('COMPLETE')) setLoading(false);
+
+        if (msg.startsWith('STEP')) {
+          setData(prev => [
+            ...prev,
+            { name: `Step ${prev.length + 1}`, accuracy: acc }
+          ]);
+        }
+
+        if (msg.includes('COMPLETE')) {
+          setLoading(false);
+        }
       }, delay);
     });
   };
+
 
   return (
     <div className="app">
